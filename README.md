@@ -1,21 +1,24 @@
 #snakes-cafe
 
 **Author**: Luther Mckeiver
-**Version**: 1.0.0 (increment the patch/fix version number up if you make more commits past your first submission)
+**Version**: 1.0.0
 
 ## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for a Code Fellows 401 class. (i.e. What's your problem domain?) -->
+Snakes-Cafe is a terminal based restaurant project allows customers to input what they want and receive their order back from an output in the terminal.
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+In order to run this app on your own machine I would go to my github account at @LutherMckeiver and then to the repo named snakes-cafe.
+
+After clone down to your machine. And cd into the project and run in via python3.
+$ python3 snakes_cafe.py
 
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. This is also an area which you can include any visuals; flow charts, example usage gifs, screen captures, etc.-->
+In this project I am using python 3.
 
 ## API
-<!-- Provide detailed instructions for your applications usage. This should include any methods or endpoints available to the user/client/developer. Each section should be formatted to provide clear syntax for usage, example calls including input data requirements and options, and example responses or return values. -->
+In this app the only thing you are inputting is the food you would like to order from the restaurant, and the output will be your order back from the terminal.
 
 ## Change Log
-<!-- Use this are to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
 
-01-01-2001 4:59pm - Added functionality to add and delete some things.
+
+08-13-2018 9:22pm - Fully functional lab from day 1.

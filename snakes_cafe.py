@@ -38,10 +38,17 @@ print('**      What would you like to order?            **')
 print('***************************************************')
 
 
+list = {
+
+}
 
 while True:
     order = input('>')
     if order == 'quit':
         quit()
-    elif:
-        print(f' ** {order} order has been added to your order **')
+    if order in list:
+        list[order] += 1
+        print(f' ** {list[order]} order has been added to your order **')
+    else:
+        list[order] = 1
+        print(f'One order of {order} has been added to your order.')
