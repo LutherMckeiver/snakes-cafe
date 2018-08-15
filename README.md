@@ -22,3 +22,4 @@ In this app the only thing you are inputting is the food you would like to order
 
 
 08-13-2018 9:22pm - Fully functional lab from day 1.
+08-13-2017 07:50pm - Now it is fully functional
