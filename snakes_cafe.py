@@ -7,31 +7,36 @@ print('**')
 print('**         To quit at any time, type "quit"      **')
 print('***************************************************\n')
 
+appetizers = ['Wings', 'Cookies', 'Spring Rolls']
+entrees = ['Salmon', 'Steak', 'Meat', 'Cheese']
+desserts = ['Cake', 'Ice-Cream','Brownies', 'Pumpkin Pie']
+drinks = ['Vodka', 'Bourbon', 'Gin', 'Nail Polish Remover']
+
+
 print('Appetizers')
-print('---------')
-print('Wings')
-print('Cookies')
-print('Spring Rolls\n')
+print('----------')
+for app in appetizers:
+    print(app)
+print('\n')
+
 
 print('Entrees')
 print('--------')
-print('Salmon')
-print('Steak')
-print('Meat Tornado')
-print('A Literal Garden\n')
+for starter in entrees:
+    print(starter)
+print('\n')
 
 print('Desserts')
-print('--------')
-print('Ice cream')
-print('Cake')
-print('Pie\n')
+print('---------')
+for sweet in desserts:
+    print(sweet)
+print('\n')
 
 print('Drinks')
-print('------')
-print('Coffee')
-print('Tea')
-print('Blood of the Innocent\n')
-
+print('-------')
+for lit in drinks:
+    print(lit)
+print('\n')
 
 print('***************************************************')
 print('**      What would you like to order?            **')
@@ -51,4 +56,4 @@ while True:
         print(f' ** {list[order]} order has been added to your order **')
     else:
         list[order] = 1
-        print(f'One order of {order} has been added to your order.')
+        print(f'1 order of {order} has been added to your order.')
