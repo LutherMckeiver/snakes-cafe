@@ -1,27 +1,40 @@
 import uuid
+import argparse
+import csv
+import sys
 
 SALES_TAX = .096
 ITEM_CATEGORY_INDEX = 0
 ITEM_PRICE_INDEX = 1
 ITEM_STOCK_QUANTITY_INDEX = 2
 ITEM_ORDER_COUNT_INDEX = 3
+PRICE_IS_NOT_FLOAT_ERROR = -1
+STOCK_IS_NOT_INT_ERROR = -2
 
-Menu = {'wings': ['app', 10.00, 20, 0], 'shrimp': ['app', 10.00, 20, 0], 'spring rolls': ['app', 10.00, 20, 0],
-        'cheese fries': ['app', 10.00, 20, 0], 'garlic bread': ['app', 10.00, 20, 0], 'calamari': ['app', 10.00, 20, 0],
-        'salmon': ['ent', 10.00, 20, 0], 'steak': ['ent', 10.00, 20, 0], 'cheeseburger': ['ent', 10.00, 20, 0],
-        'pizza': ['ent', 10.00, 20, 0], 'quesadilla': ['ent', 10.00, 20, 0], 'curry': ['ent', 10.00, 20, 0],
-        'cake': ['des', 10.00, 20, 0], 'ice cream': ['des', 10.00, 20, 0], 'brownie': ['des', 10.00, 20, 0],
-        'pumpkin pie': ['des', 10.00, 20, 0], 'chocolate': ['ent', 10.00, 20, 0], 'lemon bar': ['des', 10.00, 20, 0],
-        'vodka': ['dri', 10.00, 20, 0], 'bourbon': ['dri', 10.00, 20, 0], 'gin': ['dri', 10.00, 20, 0],
-        'slushie': ['dri', 10.00, 20, 0], 'beer': ['dri', 10.00, 20, 0], 'tequlia': ['dri', 10.00, 20, 0],
-        'fries': ['sid', 10.00, 20, 0], 'chips': ['sid', 10.00, 20, 0], 'guacamole': ['sid', 10.00, 20, 0],
-        'beans': ['sid', 10.00, 20, 0], 'macaroni': ['sid', 10.00, 20, 0], 'coleslaw': ['sid', 10.00, 20, 0], }
+Menu = {}
+appetizers = []
+entrees = []
+desserts = []
+drinks = []
+sides = []
 
-appetizers = ['wings', 'shrimp', 'spring rolls', 'cheese fries', 'garlic bread', 'calamari']
-entrees = ['salmon', 'steak', 'cheeseburger', 'pizza', 'quesadilla', 'curry']
-desserts = ['cake', 'ice cream', 'brownie', 'pumpkin pie', 'chocolate', 'lemon bar']
-drinks = ['vodka', 'bourbon', 'gin', 'slushie', 'beer', 'tequila']
-sides = ['fries', 'chips', 'guacamole', 'beans', 'macaroni', 'coleslaw']
+def initMenu():
+    Menu = {'wings': ['app', 10.00, 20, 0], 'shrimp': ['app', 10.00, 20, 0], 'spring rolls': ['app', 10.00, 20, 0],
+            'cheese fries': ['app', 10.00, 20, 0], 'garlic bread': ['app', 10.00, 20, 0], 'calamari': ['app', 10.00, 20, 0],
+            'salmon': ['ent', 10.00, 20, 0], 'steak': ['ent', 10.00, 20, 0], 'cheeseburger': ['ent', 10.00, 20, 0],
+            'pizza': ['ent', 10.00, 20, 0], 'quesadilla': ['ent', 10.00, 20, 0], 'curry': ['ent', 10.00, 20, 0],
+            'cake': ['des', 10.00, 20, 0], 'ice cream': ['des', 10.00, 20, 0], 'brownie': ['des', 10.00, 20, 0],
+            'pumpkin pie': ['des', 10.00, 20, 0], 'chocolate': ['ent', 10.00, 20, 0], 'lemon bar': ['des', 10.00, 20, 0],
+            'vodka': ['dri', 10.00, 20, 0], 'bourbon': ['dri', 10.00, 20, 0], 'gin': ['dri', 10.00, 20, 0],
+            'slushie': ['dri', 10.00, 20, 0], 'beer': ['dri', 10.00, 20, 0], 'tequlia': ['dri', 10.00, 20, 0],
+            'fries': ['sid', 10.00, 20, 0], 'chips': ['sid', 10.00, 20, 0], 'guacamole': ['sid', 10.00, 20, 0],
+            'beans': ['sid', 10.00, 20, 0], 'macaroni': ['sid', 10.00, 20, 0], 'coleslaw': ['sid', 10.00, 20, 0], }
+
+    appetizers = ['wings', 'shrimp', 'spring rolls', 'cheese fries', 'garlic bread', 'calamari']
+    entrees = ['salmon', 'steak', 'cheeseburger', 'pizza', 'quesadilla', 'curry']
+    desserts = ['cake', 'ice cream', 'brownie', 'pumpkin pie', 'chocolate', 'lemon bar']
+    drinks = ['vodka', 'bourbon', 'gin', 'slushie', 'beer', 'tequila']
+    sides = ['fries', 'chips', 'guacamole', 'beans', 'macaroni', 'coleslaw']
 
 
 def represents_int(s):
@@ -30,6 +43,15 @@ def represents_int(s):
         return True
     except ValueError:
         return False
+
+
+def represents_float(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
 
 
 def print_item_in_order(item):
@@ -114,7 +136,56 @@ def print_query():
     print('***************************************************')
 
 
-if __name__ == "__main__":
+def parse_arguments():
+    if not len(sys.argv) > 1:
+        return None
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--menu", help="use separate menu")
+    args = parser.parse_args()
+    return args.menu
+
+
+def getMenuFromCSV(menuCSV):
+    if not menuCSV.endswith(".csv"):
+        return None
+    with open(menuCSV, newline='') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            if not represents_float(row[2]):
+                return PRICE_IS_NOT_FLOAT_ERROR
+            if not represents_int(row[3]):
+                return PRICE_IS_NOT_IN_ERROR
+            Menu[row[0]] = [row[1], float(row[2]), int(row[3]), 0]
+            if row[1] == "app":
+                appetizers.append(row[0])
+            elif row[1] == "ent":
+                entrees.append(row[0])
+            elif row[1] == "des":
+                desserts.append(row[0])
+            elif row[1] == "dri":
+                drinks.append(row[0])
+            elif row[1] == "sid":
+                sides.append(row[0])
+
+    return "good shit"
+
+
+
+def main():
+    menuCSV = parse_arguments()
+    if menuCSV is not None:
+        return_value = getMenuFromCSV(menuCSV)
+        if return_value is None:
+            print("Menu file should be a .csv file")
+            quit()
+        elif return_value == PRICE_IS_NOT_FLOAT_ERROR:
+            print("A price in the csv menu is not of float type")
+            quit()
+        elif return_value == STOCK_IS_NOT_INT_ERROR:
+            print("A stock number in the csv menu is not of int type")
+            quit()
+    else:
+        initMenu()
 
     print_welcome()
     print_menu()
@@ -179,3 +250,10 @@ if __name__ == "__main__":
 
             else:
                 print("Invalid input")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nNext time, type q or quit")
