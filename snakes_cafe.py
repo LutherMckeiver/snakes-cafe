@@ -40,7 +40,14 @@ class Order:
         self.sides = []
         self.numberOrdered = 0
 
-    def initMenu(self):
+    def __repr__(self):
+        return 'Order {} | Items: {} | Total: {}'.format(str(self.order_UUID), self.receipt['subtotal'], len(self.receipt))
+
+    def __len__(self):
+        return len(self.receipt)
+
+
+    def init_menu(self):
         self.Menu = {'wings': ['app', 10.00, 20, 0], 'shrimp': ['app', 10.00, 20, 0], 'spring rolls': ['app', 10.00, 20, 0],
                 'cheese fries': ['app', 10.00, 20, 0], 'garlic bread': ['app', 10.00, 20, 0], 'calamari': ['app', 10.00, 20, 0],
                 'salmon': ['ent', 10.00, 20, 0], 'steak': ['ent', 10.00, 20, 0], 'cheeseburger': ['ent', 10.00, 20, 0],
@@ -52,11 +59,11 @@ class Order:
                 'fries': ['sid', 10.00, 20, 0], 'chips': ['sid', 10.00, 20, 0], 'guacamole': ['sid', 10.00, 20, 0],
                 'beans': ['sid', 10.00, 20, 0], 'macaroni': ['sid', 10.00, 20, 0], 'coleslaw': ['sid', 10.00, 20, 0], }
 
-        appetizers = ['wings', 'shrimp', 'spring rolls', 'cheese fries', 'garlic bread', 'calamari']
-        entrees = ['salmon', 'steak', 'cheeseburger', 'pizza', 'quesadilla', 'curry']
-        desserts = ['cake', 'ice cream', 'brownie', 'pumpkin pie', 'chocolate', 'lemon bar']
-        drinks = ['vodka', 'bourbon', 'gin', 'slushie', 'beer', 'tequila']
-        sides = ['fries', 'chips', 'guacamole', 'beans', 'macaroni', 'coleslaw']
+        self.appetizers = ['wings', 'shrimp', 'spring rolls', 'cheese fries', 'garlic bread', 'calamari']
+        self.entrees = ['salmon', 'steak', 'cheeseburger', 'pizza', 'quesadilla', 'curry']
+        self.desserts = ['cake', 'ice cream', 'brownie', 'pumpkin pie', 'chocolate', 'lemon bar']
+        self.drinks = ['vodka', 'bourbon', 'gin', 'slushie', 'beer', 'tequila']
+        self.sides = ['fries', 'chips', 'guacamole', 'beans', 'macaroni', 'coleslaw']
 
 
     def print_item_in_order(self, item):
@@ -94,7 +101,8 @@ class Order:
         self.print_line("Total Due", total)
 
 
-    def getMenuFromCSV(self, menuCSV):
+
+    def get_menu_from_csv(self, menuCSV):
         if not menuCSV.endswith(".csv"):
             return None
         with open(menuCSV, newline='') as csv_file:
@@ -119,12 +127,31 @@ class Order:
         return "good"
 
 
+    def receipt(self):
+        user_receipt = ''
+        user_receipt += ('\n' + '*' * 50 + '\n'
+         + 'The Snakes Cafe' + '\n' + 'Order ' + str(self.order_UUID) + '\n' + '=' * 50)
+        subtotal = 0
+        sales_tax = 0
+        for item in self.Menu:
+            if self.Menu[item][ITEM_ORDER_COUNT_INDEX] != 0:
+                self.print_item_in_order(item)
+                subtotal += self.Menu[item][ITEM_ORDER_COUNT_INDEX] * self.Menu[item][ITEM_PRICE_INDEX]
+        sales_tax = subtotal * SALES_TAX
+        user_receipt += ('\n' + '-' * 50 + '\nSubtotal {:>42.2f}'.format(subtotal))
+        user_receipt += ('\nSales Tax {:>41.2f}'.format(sales_tax))
+        user_receipt += ('\n' + '-' * 10 + '\nTotal Due {:>41.2f}\n'.format(subtotal + sales_tax))
+        with open(f'order-{self.order_UUID}.txt', 'w') as f:
+            f.write(user_receipt)
+
+
     def print_menu(self):
         print('Appetizers')
         print('----------')
         for k in self.appetizers:
             print(k)
         print()
+
 
         print('Entrees')
         print('--------')
@@ -187,7 +214,7 @@ def main():
     order = Order()
     menuCSV = parse_arguments()
     if menuCSV is not None:
-        return_value = order.getMenuFromCSV(menuCSV)
+        return_value = order.get_menu_from_csv(menuCSV)
         if return_value is None:
             print("Menu file should be a .csv file")
             quit()
@@ -198,7 +225,7 @@ def main():
             print("A stock number in the csv menu is not of int type")
             quit()
     else:
-        order.initMenu()
+        order.init_menu()
 
     print_welcome()
     order.print_menu()
@@ -211,6 +238,38 @@ def main():
             quit()
         elif len(parsed) == 1 and parsed[0] == "menu":
             order.print_menu()
+        elif user_input == 'receipt':
+            order.receipt()
+        elif user_input =='appetizers':
+            print('Appetizers')
+            print('----------')
+            for k in order.appetizers:
+                print(k)
+            print()
+        elif user_input =='entrees':
+            print('Entrees')
+            print('----------')
+            for k in order.entrees:
+                print(k)
+            print()
+        elif user_input =='desserts':
+            print('Desserts')
+            print('----------')
+            for k in order.desserts:
+                print(k)
+            print()
+        elif user_input =='drinks':
+            print('Drinks')
+            print('----------')
+            for k in order.drinks:
+                print(k)
+            print()
+        elif user_input =='sides':
+            print('Sides')
+            print('----------')
+            for k in order.sides:
+                print(k)
+            print()
         elif len(parsed) == 1 and parsed[0] == "order":
             order.display_order()
         elif parsed[0] == "remove":
